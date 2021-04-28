@@ -16,6 +16,7 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
   String status;
   String valueyesno;
   String valueyesno2;
+  String startsucc;
   String edu;
   List listItem = [
     "Select your Profession",
@@ -417,10 +418,10 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                           "Was Startup successfull",
                                         ),
                                         dropdownColor: Colors.white,
-                                        value: valueyesno,
+                                        value: startsucc,
                                         onChanged: (newValue) {
                                           setState(() {
-                                            valueyesno = newValue;
+                                            startsucc = newValue;
                                           });
                                         },
                                         items: yesno.map((valueItem) {
@@ -428,7 +429,7 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                               value: valueItem,
                                               child: Center(
                                                 child: Text(
-                                                  valueItem + "",
+                                                  valueItem,
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 18,
