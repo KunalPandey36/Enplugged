@@ -1,12 +1,18 @@
 import 'package:enplugged/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 import 'investor/dashboardI.dart';
 
 class LoginPage2 extends StatelessWidget {
+  ProgressDialog progressDialog;
+  String email, password;
   final _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
+    progressDialog.style(message: "Wait till We Verify....");
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -77,6 +83,9 @@ class LoginPage2 extends StatelessWidget {
                                   }
                                   return null;
                                 },
+                                onChanged: (value) {
+                                  email = value;
+                                },
                                 style: TextStyle(
                                     fontSize: 19,
                                     color: Colors.blue,
@@ -110,6 +119,9 @@ class LoginPage2 extends StatelessWidget {
                                     return 'Minimum 6 letters Needed';
                                   }
                                   return null;
+                                },
+                                onChanged: (value) {
+                                  password = value;
                                 },
                                 obscureText: true,
                                 style: TextStyle(
@@ -152,14 +164,32 @@ class LoginPage2 extends StatelessWidget {
                                   child: MaterialButton(
                                     minWidth: double.infinity,
                                     height: 60,
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      progressDialog.show();
                                       if (_formkey.currentState.validate()) {
-                                        
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DashboardI()));
+                                        try {
+                                          await FirebaseAuth.instance
+                                              .signInWithEmailAndPassword(
+                                                  email: email,
+                                                  password: password);
+                                          progressDialog.hide();
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DashboardI()));
+                                        } catch (e) {
+                                          progressDialog.hide();
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(
+                                                    title: Text(
+                                                        'Error During Login'),
+                                                    content: Text(
+                                                        'Could Not Register:$e'),
+                                                  ));
+                                        }
                                       } else {
                                         print("no entry");
                                       }

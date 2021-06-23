@@ -2,7 +2,10 @@ import 'package:enplugged/entrepreneur/registrationE.dart';
 import 'package:enplugged/guide/registrationG.dart';
 import 'package:enplugged/investor/registrationI.dart';
 import 'package:enplugged/menu.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class SignUp extends StatefulWidget {
   SignUp({Key key}) : super(key: key);
@@ -14,6 +17,15 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formkey = GlobalKey<FormState>();
   String valueChoose;
+  String username;
+  String emailid, password;
+
+  ProgressDialog progressDialog;
+
+  String enterpreneur = "entrepreneur";
+  String investor = "investor";
+  String guide = "guide";
+
   List listItem = [
     "Select your Profession",
     "Profession as Entrepreneur",
@@ -22,6 +34,10 @@ class _SignUpState extends State<SignUp> {
   ];
   @override
   Widget build(BuildContext context) {
+    //important progress bar is here...
+    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
+    progressDialog.style(message: "Entering Your Data");
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
@@ -129,6 +145,9 @@ class _SignUpState extends State<SignUp> {
                                 }
                                 return null;
                               },
+                              onChanged: (value) {
+                                username = value;
+                              },
                               style: TextStyle(
                                   fontSize: 19,
                                   color: Colors.blue,
@@ -165,6 +184,9 @@ class _SignUpState extends State<SignUp> {
                                 }
                                 return null;
                               },
+                              onChanged: (value) {
+                                emailid = value;
+                              },
                               style: TextStyle(
                                   fontSize: 19,
                                   color: Colors.blue,
@@ -198,6 +220,9 @@ class _SignUpState extends State<SignUp> {
                                   return 'Minimum 6 letters Needed';
                                 }
                                 return null;
+                              },
+                              onChanged: (value) {
+                                password = value;
                               },
                               obscureText: true,
                               style: TextStyle(
@@ -240,7 +265,8 @@ class _SignUpState extends State<SignUp> {
                                 child: MaterialButton(
                                   minWidth: double.infinity,
                                   height: 60,
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    progressDialog.show();
                                     if ((valueChoose == null ||
                                         valueChoose ==
                                             "Select your Profession")) {
@@ -256,27 +282,133 @@ class _SignUpState extends State<SignUp> {
                                       print("no entry");
                                     } else if (_formkey.currentState
                                         .validate()) {
+//entrepreneur section is here.....
+
                                       if (valueChoose ==
                                           "Profession as Entrepreneur") {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegistrationEntrepreneur()));
-                                      } else if (valueChoose ==
+                                        try {
+                                          print('entery');
+                                          await FirebaseAuth.instance
+                                              .createUserWithEmailAndPassword(
+                                                  email: emailid,
+                                                  password: password);
+                                          progressDialog.update(
+                                              message:
+                                                  "Authentication Done \n Now Storing Data..");
+                                          await FirebaseFirestore.instance
+                                              .collection(enterpreneur)
+                                              .doc(emailid)
+                                              .set({
+                                            'username': username,
+                                            'email': emailid,
+                                            'password': password,
+                                            'section': enterpreneur
+                                          });
+                                          progressDialog.hide();
+                                          print('Enter Entrepreneur');
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegistrationEntrepreneur()));
+                                        } catch (e) {
+                                          progressDialog.hide();
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(
+                                                    title: Text(
+                                                        'Error During Registration'),
+                                                    content: Text(
+                                                        'Could Not Register:$e'),
+                                                  ));
+                                        }
+                                      }
+
+                                      //investor section and registration....
+
+                                      else if (valueChoose ==
                                           "Profession as Investor") {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegisterInvestor()));
-                                      } else if (valueChoose ==
+                                        try {
+                                          print('entery');
+                                          await FirebaseAuth.instance
+                                              .createUserWithEmailAndPassword(
+                                                  email: emailid,
+                                                  password: password);
+                                          progressDialog.update(
+                                              message:
+                                                  "Authentication Done \n Now Storing Data..");
+                                          await FirebaseFirestore.instance
+                                              .collection(investor)
+                                              .doc(emailid)
+                                              .set({
+                                            'username': username,
+                                            'email': emailid,
+                                            'password': password,
+                                            'section': investor
+                                          });
+                                          progressDialog.hide();
+                                          print('Enter Entrepreneur');
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterInvestor()));
+                                        } catch (e) {
+                                          progressDialog.hide();
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(
+                                                    title: Text(
+                                                        'Error During Registration'),
+                                                    content: Text(
+                                                        'Could Not Register:$e'),
+                                                  ));
+                                        }
+                                      }
+
+                                      //guide Section....
+
+                                      else if (valueChoose ==
                                           "Profession as Guide") {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegistrationGuide()));
+                                        try {
+                                          print('entery');
+                                          await FirebaseAuth.instance
+                                              .createUserWithEmailAndPassword(
+                                                  email: emailid,
+                                                  password: password);
+                                          progressDialog.update(
+                                              message:
+                                                  "Authentication Done \n Now Storing Data..");
+                                          await FirebaseFirestore.instance
+                                              .collection(guide)
+                                              .doc(emailid)
+                                              .set({
+                                            'username': username,
+                                            'email': emailid,
+                                            'password': password,
+                                            'section': guide
+                                          });
+                                          progressDialog.hide();
+                                          print('Enter Entrepreneur');
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegistrationGuide()));
+                                        } catch (e) {
+                                          progressDialog.hide();
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(
+                                                    title: Text(
+                                                        'Error During Registration'),
+                                                    content: Text(
+                                                        'Could Not Register:$e'),
+                                                  ));
+                                        }
                                       }
                                     }
                                   },

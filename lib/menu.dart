@@ -2,7 +2,6 @@ import 'package:enplugged/loginI.dart';
 import 'package:enplugged/loginG.dart';
 import 'package:enplugged/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 import 'loginE.dart';
 

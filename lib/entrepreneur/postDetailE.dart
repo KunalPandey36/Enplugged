@@ -1,34 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:enplugged/menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
-class DetailsG extends StatefulWidget {
-  DetailsG({Key key}) : super(key: key);
+class PostDetailE extends StatefulWidget {
+  PostDetailE({Key key}) : super(key: key);
 
   @override
-  _DetailsGState createState() => _DetailsGState();
+  _PostDetailEState createState() => _PostDetailEState();
 }
 
-class _DetailsGState extends State<DetailsG> {
+class _PostDetailEState extends State<PostDetailE> {
+  void _showToast() =>
+      ScaffoldMessenger.of(this.context).showSnackBar(const SnackBar(
+          content: Text("Connected"),
+          duration: Duration(
+            milliseconds: 1000,
+          )));
+
   ProgressDialog progressDialog;
-  static String name = "1",
-      totalturnover = "1",
-      companysuccess = "1",
-      since = "1",
-      successpercent = "1";
-  static String emailfake = "asdsad@asd.asd";
-  static String email = FirebaseAuth.instance.currentUser.email;
-  static DocumentReference detailsI = FirebaseFirestore.instance
-      .collection('guide')
-      .doc(email)
-      .collection('details')
-      .doc(email);
+  DocumentReference detailsI;
+  String connectme = "Connect Me";
+  String currentmailid = FirebaseAuth.instance.currentUser.email;
+
+  static String name = "x", success = "0", since = "xxxx", about = "something";
   @override
   Widget build(BuildContext context) {
     progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
-    progressDialog.style(message: "Logging Out....");
+    progressDialog.style(message: "Making the Arrangements..");
+    final List<String> todo = ModalRoute.of(context).settings.arguments;
+    String emailid = todo[0];
+    String type = todo[1];
+    detailsI = FirebaseFirestore.instance
+        .collection(type)
+        .doc(emailid)
+        .collection('details')
+        .doc(emailid);
+    print(todo);
     return Scaffold(
         body: StreamBuilder(
             stream: detailsI.snapshots(),
@@ -39,15 +47,14 @@ class _DetailsGState extends State<DetailsG> {
                 );
               }
               name = profile.data["name"];
-              totalturnover = profile.data["totalstartup"].toString();
-              successpercent = profile.data["successpercentage"].toString();
+              about = profile.data["about"];
               since = profile.data["experienceinyear"].toString();
-              companysuccess = profile.data["successfulstartup"].toString();
+              success = profile.data["successpercentage"].toString();
 
               print(name);
-              print(totalturnover);
+              print(about);
               print(since);
-              print(successpercent);
+              print(success);
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -99,7 +106,7 @@ class _DetailsGState extends State<DetailsG> {
                                           child: Column(
                                             children: [
                                               Text(
-                                                "Success",
+                                                "Success Percentage",
                                                 style: TextStyle(
                                                   color: Colors.blue,
                                                   fontSize: 22.0,
@@ -110,31 +117,7 @@ class _DetailsGState extends State<DetailsG> {
                                                 height: 5.0,
                                               ),
                                               Text(
-                                                companysuccess,
-                                                style: TextStyle(
-                                                  fontSize: 20.0,
-                                                  color: Colors.blue,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                "Profit Score",
-                                                style: TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize: 22.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 5.0,
-                                              ),
-                                              Text(
-                                                successpercent,
+                                                "$success %",
                                                 style: TextStyle(
                                                   fontSize: 20.0,
                                                   color: Colors.blue,
@@ -194,7 +177,7 @@ class _DetailsGState extends State<DetailsG> {
                               height: 10.0,
                             ),
                             Text(
-                              "$name  is a Guide with Experience of Over :$since Years /- \n \n Success percentage of :$successpercent \n \n Total of $companysuccess Successfull Companies",
+                              about,
                               style: TextStyle(
                                 fontSize: 22.0,
                                 fontStyle: FontStyle.italic,
@@ -216,13 +199,21 @@ class _DetailsGState extends State<DetailsG> {
                           onPressed: () async {
                             progressDialog.show();
                             try {
-                              await FirebaseAuth.instance.signOut();
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Menu()));
+                              await FirebaseFirestore.instance
+                                  .collection("entrepreneur")
+                                  .doc(currentmailid)
+                                  .collection('connections')
+                                  .doc(emailid)
+                                  .set({
+                                'name': name,
+                                'email': emailid,
+                                'type': type
+                              });
+                              connectme = "Connected";
+                              progressDialog.hide();
+                              _showToast();
                             } catch (e) {
-                              return e;
+                              print(e);
                             }
                           },
                           shape: RoundedRectangleBorder(
@@ -234,7 +225,7 @@ class _DetailsGState extends State<DetailsG> {
                               gradient: LinearGradient(
                                   begin: Alignment.centerRight,
                                   end: Alignment.centerLeft,
-                                  colors: [Colors.red[900], Colors.red]),
+                                  colors: [Colors.blue[900], Colors.blue]),
                               borderRadius: BorderRadius.circular(30.0),
                             ),
                             child: Container(
@@ -242,7 +233,7 @@ class _DetailsGState extends State<DetailsG> {
                                   maxWidth: 300.0, minHeight: 50.0),
                               alignment: Alignment.center,
                               child: Text(
-                                "LogOut",
+                                connectme,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 26.0,

@@ -1,5 +1,12 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enplugged/entrepreneur/dashboardE.dart';
+import 'package:enplugged/entrepreneur/flask.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:http/http.dart' as http;
 
 class RegistrationEntrepreneur extends StatefulWidget {
   RegistrationEntrepreneur({Key key}) : super(key: key);
@@ -11,6 +18,8 @@ class RegistrationEntrepreneur extends StatefulWidget {
 
 class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
   final _formkey = GlobalKey<FormState>();
+  ProgressDialog progressDialog;
+
   String valueChoose;
   String valueKind;
   String status;
@@ -18,6 +27,22 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
   String valueyesno2;
   String startsucc;
   String edu;
+
+  String name,
+      ideaofstartup,
+      areaofwork,
+      ageofcompany,
+      educationqualification,
+      kindofstartup;
+  double fundingamount,
+      totalemployee,
+      waspartofstartup,
+      numberofadvisor,
+      topcompanies,
+      wassucessful;
+
+  double bachelor, master, phd, nodegree;
+  double product, service, both;
   List listItem = [
     "Select your Profession",
     "Profession as Entreprenuer",
@@ -33,6 +58,9 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
 
   @override
   Widget build(BuildContext context) {
+    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
+    progressDialog.style(message: "Loading Your Data");
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
@@ -112,6 +140,9 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                 }
                                 return null;
                               },
+                              onChanged: (value) {
+                                name = value;
+                              },
                               style: TextStyle(
                                   fontSize: 19,
                                   color: Colors.blue,
@@ -144,6 +175,9 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                 }
                                 return null;
                               },
+                              onChanged: (value) {
+                                ideaofstartup = value;
+                              },
                               style: TextStyle(
                                   fontSize: 19,
                                   color: Colors.blue,
@@ -175,6 +209,9 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                 }
                                 return null;
                               },
+                              onChanged: (value) {
+                                areaofwork = value;
+                              },
                               style: TextStyle(
                                   fontSize: 19,
                                   color: Colors.blue,
@@ -205,6 +242,9 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                   return 'Empty Section';
                                 }
                                 return null;
+                              },
+                              onChanged: (value) {
+                                fundingamount = double.parse(value);
                               },
                               keyboardType: TextInputType.number,
                               style: TextStyle(
@@ -259,6 +299,21 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                         onChanged: (newValue) {
                                           setState(() {
                                             valueKind = newValue;
+                                            kindofstartup = valueKind;
+                                            if (valueKind == "Product Based") {
+                                              product = 1;
+                                              service = 0;
+                                              both = 0;
+                                            } else if (valueKind ==
+                                                "Service Based") {
+                                              product = 0;
+                                              service = 1;
+                                              both = 0;
+                                            } else {
+                                              product = 0;
+                                              service = 0;
+                                              both = 1;
+                                            }
                                           });
                                         },
                                         items: kind.map((valueItem) {
@@ -286,6 +341,9 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                   return 'Fill this Section';
                                 }
                                 return null;
+                              },
+                              onChanged: (value) {
+                                ageofcompany = value;
                               },
                               keyboardType: TextInputType.number,
                               style: TextStyle(
@@ -318,6 +376,9 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                   return 'Fill this Section';
                                 }
                                 return null;
+                              },
+                              onChanged: (value) {
+                                totalemployee = double.parse(value);
                               },
                               keyboardType: TextInputType.number,
                               style: TextStyle(
@@ -372,6 +433,11 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                         onChanged: (newValue) {
                                           setState(() {
                                             valueyesno = newValue;
+                                            if (valueyesno == "YES") {
+                                              waspartofstartup = 1;
+                                            } else {
+                                              waspartofstartup = 0;
+                                            }
                                           });
                                         },
                                         items: yesno.map((valueItem) {
@@ -422,6 +488,11 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                         onChanged: (newValue) {
                                           setState(() {
                                             startsucc = newValue;
+                                            if (startsucc == "YES") {
+                                              wassucessful = 1;
+                                            } else {
+                                              wassucessful = 0;
+                                            }
                                           });
                                         },
                                         items: yesno.map((valueItem) {
@@ -449,6 +520,9 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                   return 'Fill this Section';
                                 }
                                 return null;
+                              },
+                              onChanged: (value) {
+                                numberofadvisor = double.parse(value);
                               },
                               keyboardType: TextInputType.number,
                               style: TextStyle(
@@ -503,6 +577,11 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                         onChanged: (newValue) {
                                           setState(() {
                                             valueyesno2 = newValue;
+                                            if (valueyesno2 == "YES") {
+                                              topcompanies = 1;
+                                            } else {
+                                              topcompanies = 0;
+                                            }
                                           });
                                         },
                                         items: yesno.map((valueItem) {
@@ -553,6 +632,29 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                         onChanged: (newValue) {
                                           setState(() {
                                             edu = newValue;
+                                            educationqualification = edu;
+                                            if (edu == "Bachelor Degree") {
+                                              bachelor = 1;
+                                              master = 0;
+                                              phd = 0;
+                                              nodegree = 0;
+                                            } else if (edu ==
+                                                "Master's Degree") {
+                                              bachelor = 0;
+                                              master = 1;
+                                              phd = 0;
+                                              nodegree = 0;
+                                            } else if (edu == "Phd") {
+                                              bachelor = 0;
+                                              master = 0;
+                                              nodegree = 0;
+                                              phd = 1;
+                                            } else {
+                                              bachelor = 0;
+                                              master = 0;
+                                              phd = 0;
+                                              nodegree = 1;
+                                            }
                                           });
                                         },
                                         items: education.map((valueItem) {
@@ -589,13 +691,96 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                 child: MaterialButton(
                                   minWidth: double.infinity,
                                   height: 60,
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    progressDialog.show();
                                     if (_formkey.currentState.validate()) {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DashboardE()));
+                                      try {
+                                        var email = await FirebaseAuth
+                                            .instance.currentUser.email;
+
+                                        progressDialog.update(
+                                            message:
+                                                "entered Data \n Detecting Your Success Aspect");
+                                        print(
+                                            "$fundingamount + $product + $service + $both + $totalemployee + $waspartofstartup + $wassucessful + $numberofadvisor + $topcompanies + $bachelor + $master + $phd + $nodegree");
+                                        await FirebaseFirestore.instance
+                                            .collection("entrepreneur")
+                                            .doc(email)
+                                            .collection('details')
+                                            .doc(email)
+                                            .set({
+                                          'name': name,
+                                          'about': ideaofstartup,
+                                          'areaofwork': areaofwork,
+                                          'fundingamount': fundingamount,
+                                          'kindofstartup': kindofstartup,
+                                          'experienceinyear': ageofcompany,
+                                          'totalnoofemployee': totalemployee,
+                                          'waspartofstartup': waspartofstartup,
+                                          'wasstartupsuccess': wassucessful,
+                                          'totalnoofadvisor': numberofadvisor,
+                                          'workedwithtopcompanies':
+                                              topcompanies,
+                                          'educationalqualification':
+                                              educationqualification,
+                                          'email': email,
+                                          'type': "entrepreneur",
+                                          'successpercentage': "0",
+                                          'alphabet': "E"
+                                        });
+
+                                        progressDialog.update(
+                                            message: "And Finalizing..");
+                                        await FirebaseFirestore.instance
+                                            .collection("entrepreneurAll")
+                                            .doc(email)
+                                            .set({
+                                          'name': name,
+                                          'about': ideaofstartup,
+                                          'areaofwork': areaofwork,
+                                          'fundingamount': fundingamount,
+                                          'kindofstartup': kindofstartup,
+                                          'experienceinyear': ageofcompany,
+                                          'totalnoofemployee': totalemployee,
+                                          'waspartofstartup': waspartofstartup,
+                                          'wasstartupsuccess': wassucessful,
+                                          'totalnoofadvisor': numberofadvisor,
+                                          'workedwithtopcompanies':
+                                              topcompanies,
+                                          'educationalqualification':
+                                              educationqualification,
+                                          'email': email,
+                                          'type': "entrepreneur",
+                                          'successpercentage': "50",
+                                          'failpercentage': "50",
+                                          'alphabet': "E"
+                                        });
+//model pridiction is done here using flask api built by kunal,priyesh and pratik from sit/ise department....
+                                        print("Updated data successfull");
+                                        progressDialog.update(
+                                            message:
+                                                "Predicting Your \n Success or Failure Aspect");
+
+                                        ///model calling end here...
+                                        ///
+                                        progressDialog.hide();
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DashboardE()));
+                                      } catch (e) {
+                                        progressDialog.hide();
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                AlertDialog(
+                                                  title: Text(
+                                                      'Error During Registration'),
+                                                  content: Text(
+                                                      'Could Not Register:$e'),
+                                                ));
+                                      }
                                     }
                                   },
                                   color: Color(0xff0095FF),
