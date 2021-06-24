@@ -3,6 +3,7 @@ import 'package:enplugged/investor/connections.dart';
 import 'package:enplugged/investor/detailsI.dart';
 import 'package:enplugged/investor/post.dart';
 import 'package:enplugged/investor/postDetail.dart';
+import 'package:enplugged/investor/updateI.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -191,7 +192,7 @@ class _DashboardIState extends State<DashboardI> {
                         style: TextStyle(color: Colors.blue, fontSize: 19),
                       ),
                       subtitle: new Text(
-                        "$aboutentre \n \n SuccessScore:$profitmade % \n Funding Amount:Rs.$funding \n",
+                        "$aboutentre \n \n SuccessScore:$profitmade  \n Funding Amount:Rs.$funding \n",
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                       onTap: () {
@@ -665,7 +666,12 @@ class _DashboardIState extends State<DashboardI> {
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: "Lobster")),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => UpdateI()));
+                                  },
                                 ),
                                 const SizedBox(width: 8),
                               ],
@@ -762,44 +768,6 @@ class _DashboardIState extends State<DashboardI> {
                           ],
                         ),
                       ),
-                      Card(
-                          color: Colors.indigo.shade600,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      'https://www.logodesign.net/logo/abstract-cuboid-building-4519ld.png'),
-                                ),
-                                title: Text('Enter Company Logo',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "Lobster")),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  RaisedButton(
-                                    color: Colors.white,
-                                    child: const Text('Link',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: "Lobster")),
-                                    onPressed: () {},
-                                  ),
-                                  const SizedBox(width: 8),
-                                ],
-                              ),
-                            ],
-                          )),
                     ],
                   ),
                 ),

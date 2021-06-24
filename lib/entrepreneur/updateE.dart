@@ -1,23 +1,18 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enplugged/entrepreneur/dashboardE.dart';
-import 'package:enplugged/entrepreneur/flask.dart';
-import 'package:enplugged/entrepreneur/predictionscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart' as http;
 
-class RegistrationEntrepreneur extends StatefulWidget {
-  RegistrationEntrepreneur({Key key}) : super(key: key);
+class UpdateE extends StatefulWidget {
+  UpdateE({Key key}) : super(key: key);
 
   @override
-  _RegistrationEntrepreneurState createState() =>
-      _RegistrationEntrepreneurState();
+  _UpdateEState createState() => _UpdateEState();
 }
 
-class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
+class _UpdateEState extends State<UpdateE> {
   final _formkey = GlobalKey<FormState>();
   ProgressDialog progressDialog;
 
@@ -97,7 +92,7 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
               Column(
                 children: <Widget>[
                   Text(
-                    "Welcome Entrepreneur..",
+                    "Updation Page ",
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -107,7 +102,7 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                     height: 5,
                   ),
                   Text(
-                    "Register Your Company For Better Result",
+                    "Update Your Info",
                     style: TextStyle(fontSize: 15, color: Colors.grey[700]),
                   ),
                   SizedBox(
@@ -138,109 +133,6 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                               backgroundColor: Colors.blue,
                               valueColor: new AlwaysStoppedAnimation<Color>(
                                   Colors.white),
-                            ),
-                            SizedBox(
-                              height: 14,
-                            ),
-                            TextFormField(
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Fill this Section';
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                name = value;
-                              },
-                              style: TextStyle(
-                                  fontSize: 19,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold),
-                              decoration: InputDecoration(
-                                  labelText: 'StartUp Name',
-                                  labelStyle: TextStyle(
-                                    fontSize: 19,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 25,
-                                    horizontal: 25,
-                                  ),
-                                  focusColor: Color(0xff0962ff),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      borderSide:
-                                          BorderSide(color: Colors.black))),
-                            ),
-                            SizedBox(
-                              height: 14,
-                            ),
-                            TextFormField(
-                              maxLines: 3,
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Fill this Section';
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                ideaofstartup = value;
-                              },
-                              style: TextStyle(
-                                  fontSize: 19,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold),
-                              decoration: InputDecoration(
-                                  labelText: "Idea Of StartUp",
-                                  labelStyle: TextStyle(
-                                    fontSize: 19,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 25,
-                                    horizontal: 25,
-                                  ),
-                                  focusColor: Color(0xff0962ff),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      borderSide:
-                                          BorderSide(color: Colors.black))),
-                            ),
-                            SizedBox(
-                              height: 14,
-                            ),
-                            TextFormField(
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Fill this Section';
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                areaofwork = value;
-                              },
-                              style: TextStyle(
-                                  fontSize: 19,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold),
-                              decoration: InputDecoration(
-                                  labelText: 'Area Of Work',
-                                  labelStyle: TextStyle(
-                                    fontSize: 19,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 25,
-                                    horizontal: 25,
-                                  ),
-                                  focusColor: Color(0xff0962ff),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      borderSide:
-                                          BorderSide(color: Colors.black))),
                             ),
                             SizedBox(
                               height: 14,
@@ -341,41 +233,6 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                         }).toList(),
                                       ),
                                     )))),
-                            SizedBox(
-                              height: 14,
-                            ),
-                            TextFormField(
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Fill this Section';
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                ageofcompany = value;
-                              },
-                              keyboardType: TextInputType.number,
-                              style: TextStyle(
-                                  fontSize: 19,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold),
-                              decoration: InputDecoration(
-                                  labelText: "Year Of Establishment",
-                                  labelStyle: TextStyle(
-                                    fontSize: 19,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 25,
-                                    horizontal: 25,
-                                  ),
-                                  focusColor: Color(0xff0962ff),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      borderSide:
-                                          BorderSide(color: Colors.black))),
-                            ),
                             SizedBox(
                               height: 14,
                             ),
@@ -757,13 +614,13 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                             .doc(email)
                                             .collection('details')
                                             .doc(email)
-                                            .set({
-                                          'name': name,
-                                          'about': ideaofstartup,
-                                          'areaofwork': areaofwork,
+                                            .update({
+                                          'successpercentage':
+                                              successmodel.toString(),
+                                          'failpercentage':
+                                              failmodel.toString(),
                                           'fundingamount': fundingamount,
                                           'kindofstartup': kindofstartup,
-                                          'experienceinyear': ageofcompany,
                                           'totalnoofemployee': totalemployee,
                                           'waspartofstartup': waspartofstartup,
                                           'wasstartupsuccess': wassucessful,
@@ -772,11 +629,6 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                               topcompanies,
                                           'educationalqualification':
                                               educationqualification,
-                                          'email': email,
-                                          'type': "entrepreneur",
-                                          'successpercentage': successmodel,
-                                          'failpercentage': failmodel,
-                                          'alphabet': "E"
                                         });
                                         progressDialog.update(
                                             message:
@@ -788,13 +640,13 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                         await FirebaseFirestore.instance
                                             .collection("entrepreneurAll")
                                             .doc(email)
-                                            .set({
-                                          'name': name,
-                                          'about': ideaofstartup,
-                                          'areaofwork': areaofwork,
+                                            .update({
+                                          'successpercentage':
+                                              successmodel.toString(),
+                                          'failpercentage':
+                                              failmodel.toString(),
                                           'fundingamount': fundingamount,
                                           'kindofstartup': kindofstartup,
-                                          'experienceinyear': ageofcompany,
                                           'totalnoofemployee': totalemployee,
                                           'waspartofstartup': waspartofstartup,
                                           'wasstartupsuccess': wassucessful,
@@ -803,13 +655,6 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                               topcompanies,
                                           'educationalqualification':
                                               educationqualification,
-                                          'email': email,
-                                          'type': "entrepreneur",
-                                          'successpercentage':
-                                              successmodel.toString(),
-                                          'failpercentage':
-                                              failmodel.toString(),
-                                          'alphabet': "E"
                                         });
                                         Color color;
                                         if (successmodel > failmodel) {
@@ -876,13 +721,13 @@ class _RegistrationEntrepreneurState extends State<RegistrationEntrepreneur> {
                                       }
                                     }
                                   },
-                                  color: Color(0xff0095FF),
+                                  color: Colors.green,
                                   elevation: 1,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                   child: Text(
-                                    "Register",
+                                    "Update",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 18,

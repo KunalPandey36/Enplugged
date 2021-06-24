@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,112 +15,38 @@ class PridictionScreen extends StatefulWidget {
 }
 
 class _PridictionScreenState extends State<PridictionScreen> {
-  String url = '';
-  var data;
-
-  double sl = 0;
-  double sw = 0;
-  double pl = 0;
-  double pw = 0;
-
+  var result = "x";
+  int modelreport;
+  int famout = 0;
+  int count = 30;
+  int one = 1;
+  int zero = 0;
+  String value = "1";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Iris Predictor'),
-        centerTitle: true,
-        backgroundColor: Colors.black45,
-      ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 70.0, horizontal: 40.0),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                TextField(
-                  onChanged: (val) {
-                    this.sl = double.parse(val);
-                  },
-                  decoration: InputDecoration(
-                      hintText: 'Sepal Length', alignLabelWithHint: true),
-                ),
-                TextField(
-                  onChanged: (val) {
-                    this.sw = double.parse(val);
-                  },
-                  decoration: InputDecoration(
-                      hintText: 'Sepal Width', alignLabelWithHint: true),
-                ),
-                TextField(
-                  onChanged: (val) {
-                    this.pl = double.parse(val);
-                  },
-                  decoration: InputDecoration(
-                      hintText: 'Petal Length', alignLabelWithHint: true),
-                ),
-                TextField(
-                  onChanged: (val) {
-                    this.pw = double.parse(val);
-                  },
-                  decoration: InputDecoration(
-                      hintText: 'Petal Width', alignLabelWithHint: true),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                RaisedButton(
-                  onPressed: () async {
-                    //String featureString = makeStringOfFeatures(sl, sw, pl, pw);
-                    // var data = await getData('http://10.0.2.2:5000/api?query=' +featureString);
-                    var data = await getData(
-                        'http://10.0.2.2:5000/api?sl=$sl&sw=$sw&pl=$pl&pw=$pw');
-                    var decodedData = jsonDecode(data);
-                    showAlertDialog(context, decodedData['query']);
-                  },
-                  child: Text(
-                    'Predict name!',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
+      body: Column(
+        children: <Widget>[
+          ElevatedButton(
+              onPressed: () async {
+                var url = Uri.parse(
+                    'https://enpluggedmodel.herokuapp.com/?funding=$famout&Emp_count=19&N_advisor=$count&part_start=$zero&worked_top=$one&bothps=$zero&product=$one&service=$zero&part_suc_strt=$zero&bachelors=$zero&masters=$zero&nodegree=$one&phd=$zero');
+                var response = await http.get(url);
+                var reslut = response.body;
+                print('Response status: ${response.statusCode}');
+                print('Response body: ${response.body}');
+                print(reslut);
+                result = reslut.toString();
+                print(result);
+                value = result.substring(1, 2);
+                modelreport = int.parse(value);
+                print("Here is the report final:$modelreport");
+                print(value);
+              },
+              child: Text("Enter")),
+          Text(result)
+        ],
       ),
     );
-  }
-
-  showAlertDialog(BuildContext context, String name) {
-    // set up the button
-    Widget okayButton = FlatButton(
-      child: Text("Okay!"),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Flower"),
-      content: Text("The name of flower is: $name"),
-      actions: [
-        okayButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  String makeStringOfFeatures(sl, sw, pl, pw) {
-    return '$sl $sw $pl $pw';
   }
 }

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'entrepreneur/predictionscreen.dart';
 import 'myhomepage.dart';
 
 void main() async {
