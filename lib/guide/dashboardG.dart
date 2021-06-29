@@ -3,6 +3,7 @@ import 'package:enplugged/guide/connectionsG.dart';
 import 'package:enplugged/guide/detailsG.dart';
 import 'package:enplugged/guide/postDetailG.dart';
 import 'package:enplugged/guide/postG.dart';
+import 'package:enplugged/guide/updateG.dart';
 import 'package:enplugged/investor/postDetail.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -192,7 +193,7 @@ class _DashboardGState extends State<DashboardG> {
                         style: TextStyle(color: Colors.blue, fontSize: 19),
                       ),
                       subtitle: new Text(
-                        "$aboutentre \n \n SuccessScore:$profitmade % \n Funding Amount:Rs.$funding \n",
+                        "$aboutentre \n \n SuccessScore:$profitmade  \n Funding Amount:Rs.$funding \n",
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                       onTap: () {
@@ -666,7 +667,12 @@ class _DashboardGState extends State<DashboardG> {
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: "Lobster")),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => UpdateG()));
+                                  },
                                 ),
                                 const SizedBox(width: 8),
                               ],
@@ -763,44 +769,6 @@ class _DashboardGState extends State<DashboardG> {
                           ],
                         ),
                       ),
-                      Card(
-                          color: Colors.indigo.shade600,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      'https://www.logodesign.net/logo/abstract-cuboid-building-4519ld.png'),
-                                ),
-                                title: Text('Enter Company Logo',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "Lobster")),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  RaisedButton(
-                                    color: Colors.white,
-                                    child: const Text('Link',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: "Lobster")),
-                                    onPressed: () {},
-                                  ),
-                                  const SizedBox(width: 8),
-                                ],
-                              ),
-                            ],
-                          )),
                     ],
                   ),
                 ),

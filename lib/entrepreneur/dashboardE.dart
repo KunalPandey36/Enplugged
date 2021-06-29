@@ -3,6 +3,7 @@ import 'package:enplugged/entrepreneur/connectionsE.dart';
 import 'package:enplugged/entrepreneur/detailsE.dart';
 import 'package:enplugged/entrepreneur/postDetailE.dart';
 import 'package:enplugged/entrepreneur/postE.dart';
+import 'package:enplugged/entrepreneur/updateE.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -669,7 +670,12 @@ class _DashboardEState extends State<DashboardE> {
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: "Lobster")),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => UpdateE()));
+                                  },
                                 ),
                                 const SizedBox(width: 8),
                               ],
@@ -766,44 +772,6 @@ class _DashboardEState extends State<DashboardE> {
                           ],
                         ),
                       ),
-                      Card(
-                          color: Colors.indigo.shade600,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      'https://www.logodesign.net/logo/abstract-cuboid-building-4519ld.png'),
-                                ),
-                                title: Text('Enter Company Logo',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "Lobster")),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  RaisedButton(
-                                    color: Colors.white,
-                                    child: const Text('Link',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: "Lobster")),
-                                    onPressed: () {},
-                                  ),
-                                  const SizedBox(width: 8),
-                                ],
-                              ),
-                            ],
-                          )),
                     ],
                   ),
                 ),

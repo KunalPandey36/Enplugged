@@ -106,7 +106,7 @@ class _PostDetailEState extends State<PostDetailE> {
                                           child: Column(
                                             children: [
                                               Text(
-                                                "Success Percentage",
+                                                "Success Score",
                                                 style: TextStyle(
                                                   color: Colors.blue,
                                                   fontSize: 22.0,
@@ -117,7 +117,7 @@ class _PostDetailEState extends State<PostDetailE> {
                                                 height: 5.0,
                                               ),
                                               Text(
-                                                "$success %",
+                                                "$success ",
                                                 style: TextStyle(
                                                   fontSize: 20.0,
                                                   color: Colors.blue,
